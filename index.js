@@ -34,13 +34,16 @@ pdfData.then((doc) => {
   return lastPromise;
 }).then(
   (items) => {
+    console.info('COLLECTING');
     const repairItems = filterResults(items, repairHotZone);
 
     if (repairItems && repairItems.length > 0) {
+      console.info('MATCHING');
       const matchedValues = matchValues(repairItems);
 
       if (matchedValues && matchedValues.length > 0) {
         const formattedResults = formatResults(matchedValues);
+        console.info('RENDERING');
         fs.writeFile('results.json', JSON.stringify(formattedResults, null, 2));
       }
     }
@@ -100,17 +103,17 @@ function formatResults(matchedValues) {
     if (parsedValue) {
       formattedResults.push({
         item: values[1],
-        cost: parsedValue
+        cost: parsedValue,
       });
     } else {
       formattedResults.push({
         item: values[0],
-        cost:  tryParseFloat(values[1])
+        cost: tryParseFloat(values[1]),
       });
     }
-  })
+  });
 
-  return formattedResults
+  return formattedResults;
 }
 
 function loadPage(doc, pageNum) {
