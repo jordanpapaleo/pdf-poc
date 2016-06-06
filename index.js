@@ -34,9 +34,16 @@ pdfData.then((doc) => {
   return lastPromise;
 }).then(
   (items) => {
-    const repairItems = filterResults(items);
-    matchValues(repairItems);
-    fs.writeFile('index3.json', JSON.stringify(repairItems, null, 2));
+    const repairItems = filterResults(items, repairHotZone);
+
+    if (repairItems && repairItems.length > 0) {
+      const matchedValues = matchValues(repairItems);
+
+      if (matchedValues && matchedValues.length > 0) {
+        const formattedResults = formatResults(matchedValues);
+        fs.writeFile('results.json', JSON.stringify(formattedResults, null, 2));
+      }
+    }
   },
   (err) => {
     console.error(`Error: ${err}`);
@@ -44,10 +51,10 @@ pdfData.then((doc) => {
 );
 
 // filter data from the pdf scrape by page position
-function filterResults(items) {
-  if (repairHotZone) {
-    const min = repairHotZone[0];
-    const max = repairHotZone[1];
+function filterResults(items, dimensions) {
+  if (dimensions) {
+    const min = dimensions[0];
+    const max = dimensions[1];
 
     return items.filter((item) => {
       const position = item.transform[5];
@@ -61,15 +68,49 @@ function matchValues(items) {
   const sortedItems = positionSort(items);
 
   let prevPosition;
-  sortedItems.forEach((item, i) => {
-    if (item.transform[5] === prevPosition) {
+  let tempVar = [];
+  for (let i = 0, j = sortedItems.length; i < j; i++) {
+    const item = sortedItems[i];
 
-    } else {
+    if (item.text === '$') {
+      continue;
+    }
+
+    if (item.transform[5] !== prevPosition) {
+      if (tempVar.length) {
+        matchedValues.push(tempVar);
+        tempVar = [];
+      }
+
       prevPosition = item.transform[5];
     }
-  });
 
-  return matchValues;
+    tempVar.push(item.text);
+  }
+
+  return matchedValues;
+}
+
+function formatResults(matchedValues) {
+  const formattedResults = [];
+
+  matchedValues.forEach((values) => {
+    const parsedValue = tryParseFloat(values[0]);
+
+    if (parsedValue) {
+      formattedResults.push({
+        item: values[1],
+        cost: parsedValue
+      });
+    } else {
+      formattedResults.push({
+        item: values[0],
+        cost:  tryParseFloat(values[1])
+      });
+    }
+  })
+
+  return formattedResults
 }
 
 function loadPage(doc, pageNum) {
@@ -96,7 +137,7 @@ function loadPage(doc, pageNum) {
 }
 
 function getRepairHotZone(item) {
-  const REPAIR_ITEMS = 10;
+  const REPAIR_ITEMS = 12;
   const ROW_HEIGHT = 9.2;
   const minThreshold = item.transform[5] - REPAIR_ITEMS * ROW_HEIGHT;
 
@@ -111,4 +152,9 @@ function positionSort(items) {
   return items.sort((a, b) => {
     return a.transform[5] - b.transform[5];
   });
+}
+
+function tryParseFloat(value) {
+  const tempVal = parseFloat(value.replace(',', ''));
+  return (isNaN(tempVal)) ? false : tempVal;
 }
