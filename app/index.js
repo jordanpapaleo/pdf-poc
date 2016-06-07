@@ -4,7 +4,7 @@ const dataMapService = require('./dataMapService');
 const processPdfService = require('./processPdfService');
 const Addendum = require('./Addendum');
 
-function doStuff(file, cb) {
+function processAddendum(file, cb) {
   processPdfService.load(file).then(
     (items) => {
       const processedItems = dataMapService.load(items);
@@ -17,4 +17,4 @@ function doStuff(file, cb) {
   );
 }
 
-module.exports = doStuff;
+module.exports = processAddendum;

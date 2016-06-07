@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Hapi = require('hapi');
-const doStuff = require('../app/index');
+const processAddendum = require('../app/index');
 const server = new Hapi.Server();
 server.connection({ port: 8888 });
 
@@ -44,7 +44,7 @@ server.route({
       const pdfPath = path.join(__dirname, writable.path);
       const file = new Uint8Array(fs.readFileSync(pdfPath));
 
-      doStuff(file, (jsonData) => {
+      processAddendum(file, (jsonData) => {
         reply(JSON.stringify({
           headers: data.headers,
           body: jsonData,
