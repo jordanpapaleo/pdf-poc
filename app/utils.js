@@ -11,6 +11,11 @@ const fs = require('fs');
 
       return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
     },
+    rmFile(filePath) {
+      if (fs.statSync(filePath).isFile()) {
+        fs.unlinkSync(filePath);
+      }
+    },
     rmDir(dirPath, removeSelf) {
       const files = fs.readdirSync(dirPath);
 

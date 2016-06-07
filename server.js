@@ -61,7 +61,7 @@ const Hapi = require('hapi');
           }))
             .code(201);
 
-          utils.rmDir('./tmp', false);
+          utils.rmFile(writable.path);
         });
       });
     },
