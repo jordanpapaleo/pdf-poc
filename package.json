@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node api/index.js",
-    "deploy": "git push heroku master"
+    "deploy": "git push heroku master && heroku open"
   },
   "author": "",
   "license": "ISC",
