@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+
 (function () {
   const utils = require('./utils');
 
@@ -7,6 +9,21 @@
     return items.sort((a, b) => {
       return a.transform[5] - b.transform[5];
     });
+  }
+
+  // There are a few cases in which we do not have the correct fields to format
+  function _shouldFormat(values) {
+    let hasValues = true;
+
+    if (!values[0] || !values[1]) {
+      hasValues = false;
+    } else if (values[0] === 'ESTIMATED COST' || values[1] === 'ESTIMATED COST') {
+      hasValues = false;
+    } else if (values[0] === 'REPAIR ITEM' || values[1] === 'REPAIR ITEM') {
+      hasValues = false;
+    }
+
+    return hasValues;
   }
 
   function _getRepairHotZone(item) {
@@ -25,9 +42,10 @@
     const hotZones = {};
 
     items.forEach((item) => {
-      if (item.text === 'REPAIR ITEM') {
+      const text = item.text.replace(' ', '').toLowerCase();
+      if (text === 'repairitem') {
         hotZones.repairItems = _getRepairHotZone(item);
-      } else if (item.text === 'ESTIMATED COST') {
+      } else if (text === 'estimatedcost') {
         hotZones.cost = _getCostHotZone(item);
       }
     });
@@ -36,7 +54,14 @@
   }
 
   const dataMapService = {
+    test(items) {
+      fs.writeFileSync('BLAR-PLOP.json', JSON.stringify(items, null, 2));
+    },
     load(items) {
+      if (process.env.TEST_MODE) {
+        this.test(items);
+      }
+
       this._items = items;
       this.hotZones = _getHotZones(items);
       const repairItems = this.filterResults(items, this.hotZones.repairItems);
@@ -60,6 +85,7 @@
 
         return items.filter((item) => {
           const position = item.transform[5];
+          if (item.text === '$') return false;
           return (position >= min && position <= max);
         });
       }
@@ -67,26 +93,26 @@
     matchValues(items) {
       const matchedValues = [];
       const sortedItems = _positionSort(items);
+      const THRESHOLD = 2; // Visual position difference allowed to match
 
-      let prevPosition;
+      let previousPosition;
       let tempVar = [];
       for (let i = 0, j = sortedItems.length; i < j; i++) {
         const item = sortedItems[i];
+        tempVar.push(item.text);
 
-        if (item.text === '$') {
-          continue;
-        }
-
-        if (item.transform[5] !== prevPosition) {
-          if (tempVar.length) {
-            matchedValues.push(tempVar);
-            tempVar = [];
+        if (i === 0) {
+          previousPosition = item.transform[5];
+        } else {
+          if (Math.abs(previousPosition - item.transform[5]) <= THRESHOLD) {
+            if (tempVar.length === 2) {
+              matchedValues.push(tempVar);
+              tempVar = [];
+            }
           }
 
-          prevPosition = item.transform[5];
+          previousPosition = item.transform[5];
         }
-
-        tempVar.push(item.text);
       }
 
       return matchedValues;
@@ -94,7 +120,13 @@
     formatResults(matchedValues) {
       const formattedResults = [];
 
-      matchedValues.forEach((values) => {
+      for (let i = 0, j = matchedValues.length; i < j; i++) {
+        const values = matchedValues[i];
+
+        if (!_shouldFormat(values)) {
+          continue;
+        }
+
         const parsedValue = utils.tryParseFloat(values[0]);
 
         if (parsedValue) {
@@ -108,7 +140,7 @@
             cost: utils.tryParseFloat(values[1]),
           });
         }
-      });
+      }
 
       return formattedResults;
     },

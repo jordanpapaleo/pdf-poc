@@ -27,6 +27,7 @@ const Hapi = require('hapi');
         output: 'stream',
         parse: true,
         allow: ['application/pdf'],
+        maxBytes: 5000000,
       },
     },
     handler(request, reply) {

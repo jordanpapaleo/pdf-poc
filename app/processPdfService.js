@@ -10,7 +10,7 @@ const PDFJS = require('pdfjs-dist');
         return content.items.map((item) => {
           return {
             transform: item.transform, // [scaleX, skewY, skewX, scaleY, translateX, translateY]
-            text: item.str,
+            text: item.str.trim().replace(/\s+/g, ' '),
             width: item.width,
             height: item.height,
           };
