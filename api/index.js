@@ -18,43 +18,39 @@ server.route({
   path: '/v1/pdf',
   config: {
     payload: {
-      output: 'stream', // 'file'
+      output: 'stream',
       parse: true,
-      allow: ['application/pdf', 'multipart/form-data'],
+      allow: ['application/pdf'],
     },
   },
   handler(request, reply) {
     const data = request.payload;
-
-    /*console.info('-------------------------------');
-    for (var key in data) {
-      // console.log(key);
-    }
-    console.info('-------------------------------');*/
-
     const writable = fs.createWriteStream('file.pdf');
-    writable.on('error', (err) => {
-      console.error(err);
-    });
 
     data.pipe(writable);
 
     data.on('end', (err) => {
       if (err) { reply(JSON.stringify(err)); }
+      writable.end();
+    });
 
-      // YOU are HERE
+    writable.on('error', (err) => {
+      console.error(err);
+    });
 
-      console.info('writable', writable)
-      const pdfPath = path.join(__dirname, writable.path)
+    writable.on('finish', (err) => {
+      if (err) { reply(JSON.stringify(err)); }
+
+      const pdfPath = path.join(__dirname, writable.path);
       const file = new Uint8Array(fs.readFileSync(pdfPath));
-      // console.info('FILE', file)
 
       doStuff(file, (jsonData) => {
         reply(JSON.stringify({
           headers: data.headers,
-          body: jsonData
-        }));
-      })
+          body: jsonData,
+        }))
+        .code(201);
+      });
     });
   },
 });
