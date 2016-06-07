@@ -3,13 +3,13 @@ const path = require('path');
 const Hapi = require('hapi');
 const processAddendum = require('../app/index');
 const server = new Hapi.Server();
-server.connection({ port: 8888 });
+server.connection({ port: process.env.PORT || 8080 });
 
 server.route({
   method: 'GET',
   path: '/',
   handler(req, reply) {
-    reply('i am a beautiful butterfly');
+    reply('test test test');
   },
 });
 
