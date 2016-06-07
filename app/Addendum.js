@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
   class Addendum {
     constructor(data) {
       this._data = data;

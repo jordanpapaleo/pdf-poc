@@ -16,6 +16,7 @@
     "no-underscore-dangle": 0,
     "no-console": 0,
     "spaced-comment": 0,
-    "func-names": 0
+    "func-names": 0,
+    "global-require": 0
   }
 }
