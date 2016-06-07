@@ -1,15 +1,12 @@
 'use strict';
 
 (function () {
-  function positionSort(items) {
+  const utils = require('./utils');
+
+  function _positionSort(items) {
     return items.sort((a, b) => {
       return a.transform[5] - b.transform[5];
     });
-  }
-
-  function tryParseFloat(value) {
-    const tempVal = parseFloat(value.replace(',', ''));
-    return (isNaN(tempVal)) ? false : tempVal;
   }
 
   function _getRepairHotZone(item) {
@@ -69,7 +66,7 @@
     },
     matchValues(items) {
       const matchedValues = [];
-      const sortedItems = positionSort(items);
+      const sortedItems = _positionSort(items);
 
       let prevPosition;
       let tempVar = [];
@@ -98,7 +95,7 @@
       const formattedResults = [];
 
       matchedValues.forEach((values) => {
-        const parsedValue = tryParseFloat(values[0]);
+        const parsedValue = utils.tryParseFloat(values[0]);
 
         if (parsedValue) {
           formattedResults.push({
@@ -108,7 +105,7 @@
         } else {
           formattedResults.push({
             item: values[0],
-            cost: tryParseFloat(values[1]),
+            cost: utils.tryParseFloat(values[1]),
           });
         }
       });

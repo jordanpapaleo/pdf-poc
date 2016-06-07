@@ -4,6 +4,10 @@ const fs = require('fs');
 
 (function () {
   const utils = {
+    tryParseFloat(value) {
+      const tempVal = parseFloat(value.replace(',', ''));
+      return (isNaN(tempVal)) ? false : tempVal;
+    },
     getGuid() {
       function s4() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);

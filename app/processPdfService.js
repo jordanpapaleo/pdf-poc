@@ -25,9 +25,7 @@ const PDFJS = require('pdfjs-dist');
         const numPages = doc.numPages;
         let lastPromise = doc.getMetadata().then((meta) => {
           console.log('# Metadata Is Loaded');
-          console.log('## Info');
           console.log(JSON.stringify(meta.info, null, 2));
-          console.log();
         });
 
         // Loading of the first page will wait on metadata and

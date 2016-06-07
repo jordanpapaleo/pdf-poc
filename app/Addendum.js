@@ -7,7 +7,7 @@
     }
 
     render() {
-      return JSON.stringify(this._data, null, 2);
+      return JSON.stringify(this._data);
     }
   }
 
