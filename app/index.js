@@ -7,18 +7,23 @@ const dataMapService = require('./dataMapService');
 const processPdfService = require('./processPdfService');
 const Addendum = require('./Addendum');
 
-const pdfPath = process.argv[2] || path.join(__dirname, '../test-data/REO 2.pdf');
-const file = new Uint8Array(fs.readFileSync(pdfPath));
+// const pdfPath = path.join(__dirname, '../test-data/REO 2.pdf');
+// const file = new Uint8Array(fs.readFileSync(pdfPath));
 
-processPdfService.load(file).then(
-  (items) => {
-    const processedItems = dataMapService.load(items);
-    const addendum = new Addendum(processedItems);
+function doStuff(file, cb) {
+  console.info('FILE', file)
+  processPdfService.load(file).then(
+    (items) => {
+      const processedItems = dataMapService.load(items);
+      const addendum = new Addendum(processedItems);
 
-    console.info(addendum.render());
-    // fs.writeFile('results.json', addendum.render());
-  },
-  (err) => {
-    console.error(`Error: ${err}`);
-  }
-);
+      console.info(addendum.render());
+      cb(addendum.render())
+    },
+    (err) => {
+      console.error(`Error: ${err}`);
+    }
+  );
+}
+
+module.exports = doStuff;
