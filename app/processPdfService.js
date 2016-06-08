@@ -30,8 +30,6 @@ const PDFJS = require('pdfjs-dist');
           pagePromises.push(_loadPage(doc, i));
         }
 
-        console.info(doc.numPages, pagePromises.length);
-
         return Promise.all(pagePromises);
       });
     },
