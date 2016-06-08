@@ -7,7 +7,7 @@ const PDFJS = require('pdfjs-dist');
       page.getViewport(1.0); // scale
 
       return page.getTextContent().then((content) => {
-        return content.items.map((item) => {
+        const mappedItems = content.items.map((item) => {
           return {
             transform: item.transform, // [scaleX, skewY, skewX, scaleY, translateX, translateY]
             text: item.str.trim().replace(/\s+/g, ' '),
@@ -15,6 +15,8 @@ const PDFJS = require('pdfjs-dist');
             height: item.height,
           };
         });
+
+        return mappedItems;
       });
     });
   }
@@ -22,20 +24,13 @@ const PDFJS = require('pdfjs-dist');
   const processPdfService = {
     load(file) {
       return PDFJS.getDocument(file).then((doc) => {
-        const numPages = doc.numPages;
-        let lastPromise = doc.getMetadata().then((meta) => {
-          console.log('# Metadata Is Loaded');
-          console.log(JSON.stringify(meta.info, null, 2));
-        });
+        const pagePromises = [];
 
-        // Loading of the first page will wait on metadata and
-        // subsequent loadings will wait on the previous pages.
-        // We have top use 1 because in the pdf.js library they subtract by 1
-        for (let i = 1; i <= numPages; i++) {
-          lastPromise = lastPromise.then(_loadPage.bind(null, doc, i));
+        for (let i = 1; i <= doc.numPages; i++) {
+          pagePromises.push(_loadPage(doc, i));
         }
 
-        return lastPromise;
+        return Promise.all(pagePromises);
       });
     },
   };

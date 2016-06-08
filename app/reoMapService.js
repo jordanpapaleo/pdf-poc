@@ -62,7 +62,7 @@ const fs = require('fs');
 
   const reoMapService = {
     test(items) {
-      fs.writeFileSync('BLAR-PLOP.json', JSON.stringify(items, null, 2));
+      // fs.writeFileSync('BLAR-PLOP.json', JSON.stringify(items, null, 2));
     },
     load(items) {
       if (process.env.TEST_MODE) {
@@ -74,7 +74,6 @@ const fs = require('fs');
         asisItems: [],
       };
 
-      this._items = items;
       this.hotZones = _getHotZones(items);
 
       const filteredAsIsItems = this.filterResults(items, this.hotZones.asisItems);
