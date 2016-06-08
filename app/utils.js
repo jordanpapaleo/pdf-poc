@@ -5,6 +5,7 @@ const fs = require('fs');
 (function () {
   const utils = {
     tryParseFloat(value) {
+      // will pickup '123-456' as a number bc - can be used for negative values
       const tempVal = parseFloat(value.replace(',', ''));
       return (isNaN(tempVal)) ? false : tempVal;
     },
