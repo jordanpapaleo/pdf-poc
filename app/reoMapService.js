@@ -141,7 +141,7 @@ const fs = require('fs');
           if (parsedFloatVal >= 120) {
             asisHash[key].price = parsedFloatVal;
           } else {
-            asisHash[key].days = parsedFloatVal;
+            asisHash[key].days = item.text;
           }
         }
       });
