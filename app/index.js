@@ -10,9 +10,14 @@
 
     processPdfService.load(file).then(
       (items) => {
+        console.info('Addendum-----------------');
+
         addendum.processedPdf = items;
 
         const results = reoMapService.load(items);
+
+        console.info(items);
+        console.info('END-----------------');
 
         addendum.repairItems = results.repairItems;
         addendum.asisItems = results.asisItems;
@@ -25,5 +30,25 @@
     );
   }
 
-  module.exports = processAddendum;
+  function processForImages(file, cb) {
+    processPdfService.load(file).then(
+      (items) => {
+        console.info('Images-----------------');
+        console.info(items.length);
+        console.info('END-----------------');
+
+        if (cb) {
+          cb();
+        }
+      },
+      (err) => {
+        console.error(`Error: ${err}`);
+      }
+    );
+  }
+
+  module.exports = {
+    processAddendum,
+    processForImages,
+  };
 }());
