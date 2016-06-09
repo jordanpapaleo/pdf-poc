@@ -1,7 +1,5 @@
 'use strict';
 
-const fs = require('fs');
-
 (function () {
   const utils = require('./utils');
   const THRESHOLD = 2; // Visual position difference allowed to match

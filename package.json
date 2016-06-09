@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "",
+    "test": "npm run lint --force",
+    "lint": "eslint server.js app/**.js",
     "start": "node server.js",
     "start:dev": "TEST_MODE=true nodemon server.js",
     "deploy": "git push heroku master"
