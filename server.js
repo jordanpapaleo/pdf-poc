@@ -55,12 +55,11 @@ const Hapi = require('hapi');
 
         const file = new Uint8Array(fs.readFileSync(writable.path));
 
-        app.processAddendum(file, (jsonData) => {
+        app.processAddendum(file, (results) => {
           reply(JSON.stringify({
             headers: data.headers,
-            body: jsonData,
-          }))
-            .code(201);
+            body: results,
+          })).code(201);
 
           utils.rmFile(writable.path);
         });
@@ -103,9 +102,10 @@ const Hapi = require('hapi');
         } else {
           const file = new Uint8Array(fs.readFileSync(writable.path));
 
-          app.processForImages(file, (jsonData) => {
-            // console.info(jsonData);
-            reply('yo').code(201);
+          app.processForImages(file, (results) => {
+            reply({
+              body: results,
+            }).code(201);
 
             utils.rmFile(writable.path);
           });

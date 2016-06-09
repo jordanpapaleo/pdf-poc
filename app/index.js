@@ -11,12 +11,18 @@
 
     processPdfService.load(file).then(
       (items) => {
+        if (process.env.TEST_MODE) {
+          // fs.writeFileSync('BLAR-PLOP.json', JSON.stringify(items, null, 2));
+        }
+
         const results = reoMapService.load(items[0]);
         addendum.processedPdf = items[0];
         addendum.repairItems = results.repairItems;
         addendum.asisItems = results.asisItems;
 
-        cb(addendum.data);
+        if (cb && cb instanceof Function) {
+          cb(addendum.data);
+        }
       },
       (err) => {
         console.error(`Error: ${err}`);
@@ -29,7 +35,7 @@
       (items) => {
         imageExtractService.load(items);
 
-        if (cb) {
+        if (cb && cb instanceof Function) {
           cb();
         }
       },

@@ -59,14 +59,7 @@
   }
 
   const reoMapService = {
-    test(items) {
-      // fs.writeFileSync('BLAR-PLOP.json', JSON.stringify(items, null, 2));
-    },
     load(items) {
-      if (process.env.TEST_MODE) {
-        this.test(items);
-      }
-
       const extractedData = {
         repairItems: [],
         asisItems: [],
