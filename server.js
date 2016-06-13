@@ -21,6 +21,21 @@ const Hapi = require('hapi');
 
   server.route({
     method: ['POST', 'PUT'],
+    path: '/',
+    config: {
+      payload: {
+        output: 'data',
+        parse: true,
+        allow: 'application/json'
+      },
+    },
+    handler(request, reply) {
+      reply(request.payload);
+    },
+  });
+
+  server.route({
+    method: ['POST', 'PUT'],
     path: '/v1/pdf',
     config: {
       payload: {
@@ -28,7 +43,7 @@ const Hapi = require('hapi');
         parse: true,
         allow: ['application/pdf'],
         maxBytes: 5000000,
-      },
+      }
     },
     handler(request, reply) {
       const data = request.payload;
