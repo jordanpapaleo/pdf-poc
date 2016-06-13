@@ -53,7 +53,11 @@ const Hapi = require('hapi');
       data.pipe(writable);
 
       data.on('end', (err) => {
-        if (err) { reply(JSON.stringify(err)); }
+        if (err) {
+          reply(JSON.stringify(err))
+            .code(502);
+        }
+
         writable.end();
       });
 
@@ -82,6 +86,7 @@ const Hapi = require('hapi');
     },
   });
 
+  // Under construction
   server.route({
     method: ['POST', 'PUT'],
     path: '/v1/pdf-img',
@@ -97,6 +102,10 @@ const Hapi = require('hapi');
       const data = request.payload;
       const filePath = path.join(__dirname, `tmp/${utils.getGuid()}.pdf`);
       const writable = fs.createWriteStream(filePath);
+
+      reply({
+        body: 'Under Construction',
+      }).code(321);
 
       data.pipe(writable);
 

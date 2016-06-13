@@ -2,8 +2,10 @@
 
 # FILES=../test-data/*
 FILES=../ReoAppraisals/*
+
 let FILE_COUNT=0
-START=$(date +%s);
+START=$(date +%s)
+
 for f in $FILES
 do
   echo "Processing $f file...\n"
@@ -11,7 +13,8 @@ do
   ((FILE_COUNT++))
   echo "\n\n"
 done
-END=$(date +%s);
+
+END=$(date +%s)
 
 echo "$FILE_COUNT files submitted \n"
 echo "Processing Time"

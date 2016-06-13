@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:lint --force && npm run test:load",
+    "test": "npm run test:lint --force && npm run test:unit && npm run test:load",
     "test:lint": "eslint server.js app/**.js",
     "test:load": "sh load-test.sh",
+    "test:unit": "echo 'Make Unit Tests'",
     "start": "node server.js",
     "start:dev": "TEST_MODE=true nodemon server.js",
     "deploy": "git push heroku master"

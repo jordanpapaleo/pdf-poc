@@ -2,8 +2,8 @@
 
 (function () {
   const imageExtractService = {
-    load(items) {
-      // console.info('items', items);
+    load(pages) {
+      console.info('pages', pages);
     },
   };
 

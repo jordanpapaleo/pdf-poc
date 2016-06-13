@@ -10,18 +10,23 @@
     const addendum = new Addendum(file);
 
     processPdfService.load(file).then(
-      (items) => {
+      (pdfPages) => {
         if (process.env.TEST_MODE) {
           // fs.writeFileSync('BLAR-PLOP.json', JSON.stringify(items, null, 2));
         }
 
-        const results = reoMapService.load(items[0]);
-        addendum.processedPdf = items[0];
-        addendum.repairItems = results.repairItems;
-        addendum.asisItems = results.asisItems;
+        const results = reoMapService.load(pdfPages);
 
-        if (cb && cb instanceof Function) {
-          cb(addendum.data);
+        if (results) {
+          addendum.processedPdf = pdfPages;
+          addendum.repairItems = results.repairItems;
+          addendum.asisItems = results.asisItems;
+
+          if (cb && cb instanceof Function) {
+            cb(addendum.data);
+          }
+        } else {
+          cb(false);
         }
       },
       (err) => {

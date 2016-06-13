@@ -29,7 +29,6 @@
     const REPAIR_ITEMS = 12;
     const ROW_HEIGHT = 9.2;
     const minThreshold = item.transform[5] - REPAIR_ITEMS * ROW_HEIGHT;
-
     return [minThreshold, item.transform[5]];
   }
 
@@ -53,21 +52,35 @@
       }
     });
 
-    hotZones.asisItems = _getAsIsZone(asis);
+    if (asis.length > 0) {
+      hotZones.asisItems = _getAsIsZone(asis);
+    }
 
-    return hotZones;
+    return (hotZones.repairItems || hotZones.asisItems) ? hotZones : false;
   }
 
   const reoMapService = {
-    load(items) {
+    load(pages) {
+      for (let i = 0, j = pages.length; i < j; i++) {
+        const page = pages[i];
+        const TEST_STRING = 'REAL ESTATE OWNED APPRAISAL ADDENDUM';
+        const isREOAddendum = (JSON.stringify(page).indexOf(TEST_STRING) !== -1);
+
+        if (isREOAddendum) {
+          console.info(`Page ${i} ${isREOAddendum}`);
+          return this.processPage(page);
+        }
+      }
+    },
+    processPage(page) {
       const extractedData = {
         repairItems: [],
         asisItems: [],
       };
 
-      this.hotZones = _getHotZones(items);
+      this.hotZones = _getHotZones(page);
 
-      const filteredAsIsItems = this.filterResults(items, this.hotZones.asisItems);
+      const filteredAsIsItems = this.filterResults(page, this.hotZones.asisItems);
       if (filteredAsIsItems && filteredAsIsItems.length > 0) {
         const mappedAsIsValues = this.mapAsIsValues(filteredAsIsItems);
         if (mappedAsIsValues && Object.keys(mappedAsIsValues).length > 0) {
@@ -75,7 +88,7 @@
         }
       }
 
-      const filteredRepairItems = this.filterResults(items, this.hotZones.repairItems);
+      const filteredRepairItems = this.filterResults(page, this.hotZones.repairItems);
       if (filteredRepairItems && filteredRepairItems.length > 0) {
         const matchedRepairValues = this.matchRepairValues(filteredRepairItems);
         if (matchedRepairValues && matchedRepairValues.length > 0) {
