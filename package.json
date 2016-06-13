@@ -10,7 +10,8 @@
     "test:unit": "echo 'Make Unit Tests'",
     "start": "node server.js",
     "start:dev": "TEST_MODE=true nodemon server.js",
-    "deploy": "git push heroku master"
+    "deploy": "git push heroku master",
+    "log:prod": "heroku logs --app reo-poc --tail"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,8 @@
     "good-squeeze": "^3.0.1",
     "hapi": "^13.3.0",
     "node-fetch": "^1.5.3",
-    "pdfjs-dist": "^1.5.281"
+    "pdfjs-dist": "^1.5.281",
+    "raygun": "^0.8.5"
   },
   "devDependencies": {
     "eslint": "^2.11.1",

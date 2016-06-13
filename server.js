@@ -1,4 +1,6 @@
 'use strict';
+const raygun = require('raygun');
+const raygunClient = new raygun.Client().init({ apiKey: '2aqTRCoqwJvVjPYx++ZO8A==' });
 
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +19,14 @@ const Hapi = require('hapi');
     handler(req, reply) {
       reply('success get');
     },
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/error',
+    handler() {
+      throw new Error('Were not so hapi now!');
+    }
   });
 
   server.route({
@@ -136,6 +146,13 @@ const Hapi = require('hapi');
         }
       });
     },
+  });
+
+  server.on('request-error', (req, err) => {
+    raygunClient.send(err, {}, () => {
+      console.log('Send to Raygun');
+      throw err;
+    }, req);
   });
 
   server.start((err) => {
