@@ -73,8 +73,8 @@ server.on('request-error', (req, err) => {
 });
 
 server.register({
-  register: require('good'),
   options,
+  register: require('good'),
 }, (err) => {
   if (err) { throw err; }
 
