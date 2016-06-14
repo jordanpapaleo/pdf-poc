@@ -17,7 +17,7 @@ const fetch = require('node-fetch');
     fs.readFile(`../../test-data/${file}`, (err, data) => {
       if (err) throw err;
 
-      const END_POINT = 'http://SAAS-TR-L-001.local:8080/v1/pdf';
+      const END_POINT = 'http://SAAS-TR-L-001.local:8080/pdf';
       const options = {
         method: 'POST',
         headers: {

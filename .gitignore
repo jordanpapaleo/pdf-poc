@@ -3,4 +3,5 @@ node_modules
 *.pdf
 *.json
 dist
+log
 !package.json

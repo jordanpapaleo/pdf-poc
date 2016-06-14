@@ -9,7 +9,7 @@ START=$(date +%s)
 for f in $FILES
 do
   echo "Processing $f file...\n"
-  curl -# -H "Content-Type:application/pdf" --upload-file $f https://reo-poc.herokuapp.com/v1/pdf &
+  curl -# -H "Content-Type:application/pdf" --upload-file $f https://reo-poc.herokuapp.com/pdf &
   # curl -# -H "Content-Type:application/pdf" --upload-file $f http://localhost:8080/v1/pdf
   ((FILE_COUNT++))
   echo "\n\n"
