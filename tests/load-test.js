@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 
 // Under Construction
 (function () {
-  fs.readdir('../test-data', (err, names) => {
+  fs.readdir('../../test-data', (err, names) => {
     names.forEach((name) => {
       if (name.indexOf('.pdf') !== -1) {
         readFile(name);
@@ -14,7 +14,7 @@ const fetch = require('node-fetch');
   });
 
   function readFile(file) {
-    fs.readFile(`../test-data/${file}`, (err, data) => {
+    fs.readFile(`../../test-data/${file}`, (err, data) => {
       if (err) throw err;
 
       const END_POINT = 'http://SAAS-TR-L-001.local:8080/v1/pdf';
